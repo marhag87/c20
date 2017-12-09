@@ -24,7 +24,7 @@ class C20:
     def value_per_token(self) -> float:
         """Fetch token value"""
         if self._value_per_token is None:
-            response = requests.get('https://us-central1-cryptodash1.cloudfunctions.net/fundValue')
+            response = requests.get('https://crypto20.com/status')
             if response.status_code == 200:
                 self._value_per_token = response.json().get('nav_per_token')
             else:
