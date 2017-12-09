@@ -30,6 +30,7 @@ class C20:
 
     @property
     def exchange_rate(self) -> float:
+        """Fetch exchange rate if not in USD"""
         if self._exchange_rate is None:
             if self.currency == 'USD':
                 self._exchange_rate = 1.0
@@ -43,10 +44,12 @@ class C20:
 
     @property
     def curr_token_value(self) -> float:
+        """Current token value"""
         return round(self.value_per_token * self.num_tokens * self.exchange_rate, 2)
 
     @property
     def increase_num(self) -> Optional[float]:
+        """Value increase, if total investment has been specified"""
         if self.total_investment:
             return round(self.curr_token_value - self.total_investment, 2)
         else:
@@ -62,6 +65,7 @@ class C20:
 
     @property
     def data(self) -> dict:
+        """Data dict with all variables that can be used in status_format"""
         return {
             "nav": self.value_per_token,
             "token_sum": self.curr_token_value,
