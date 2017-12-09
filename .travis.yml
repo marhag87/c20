@@ -2,4 +2,4 @@ language: python
 python:
   - "3.6"
 install: "pip install -r requirements.txt && pip install -e ."
-script: "python tests/tests.py"
+script: "python tests/tests.py && pylint c20"

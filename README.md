@@ -72,6 +72,6 @@ pip install -e .
 pip install -r requirements.txt
 # Run tests
 python tests/tests.py
-# Optionally run pylint
+# Run pylint
 pylint c20
 ```
