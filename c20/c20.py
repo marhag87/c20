@@ -55,8 +55,6 @@ class C20:
         """Value increase, if total investment has been specified"""
         if self.total_investment:
             return round(self.curr_token_value - self.total_investment, 2)
-        else:
-            return None
 
     @property
     def increase_percent(self) -> Optional[str]:
@@ -64,8 +62,6 @@ class C20:
         if self.total_investment:
             percent = ((self.curr_token_value/self.total_investment) - 1)*100
             return "{0:+.01f}%".format(percent)
-        else:
-            return None
 
     @property
     def data(self) -> dict:
