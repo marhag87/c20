@@ -1,6 +1,8 @@
 c20
 ===
 
+[![Build Status](https://travis-ci.org/marhag87/c20.svg?branch=master)](https://travis-ci.org/marhag87/c20)
+
 Keep track of the value of your https://crypto20.com/ investment.
 
 Config
