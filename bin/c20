@@ -1,0 +1,4 @@
+#!/bin/env python
+from c20 import C20
+
+print(C20().status())

@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: c20
+Version: 0.1.0
+Summary: Calculate value of c20 tokens
+Home-page: https://github.com/marhag87/c20
+Author: marhag87
+Author-email: marhag87@gmail.com
+License: WTFPL
+Description-Content-Type: UNKNOWN
+Description: A simple module for calculating the value of c20 tokens.
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
