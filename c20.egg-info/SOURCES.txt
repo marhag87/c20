@@ -1,4 +1,5 @@
 README.md
+setup.py
 bin/c20
 c20/__init__.py
 c20/c20.py

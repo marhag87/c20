@@ -48,7 +48,7 @@ C20: NAV: 1.3005 - Tokens: 1181 - Value: 12973.82SEK
 Usage
 -----
 ```
-pip install .
+pip install c20
 echo "num_tokens: <tokens>" > ~/.config/c20.yaml
 echo "init_investment: <investment>" >> ~/.config/c20.yaml
 c20
