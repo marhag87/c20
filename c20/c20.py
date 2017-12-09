@@ -1,4 +1,6 @@
-#!/bin/env python
+"""
+Module for calculating value of c20 tokens
+"""
 from pathlib import Path
 from typing import Optional
 import requests
@@ -7,19 +9,44 @@ from pyyamlconfig import load_config
 TOKEN_ERROR = 'Could not get token data'
 CURRENCY_ERROR = 'Could not get currency data'
 CURRENCY_NOT_FOUND = 'Could not find the currency'
+DEFAULT_MESSAGE = (
+    'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
+)
 
 
 class C20:
+    """Class for calculating value of c20 tokens"""
     def __init__(self):
-        self.default_msg = 'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
-        self.home = str(Path.home())
-        self.config = load_config(f'{self.home}/.config/c20.yaml')
-        self.status_fmt = self.config.get('status_format', self.default_msg)
-        self.num_tokens = self.config.get('num_tokens')
-        self.total_investment = self.config.get('total_investment', False)
-        self.currency = self.config.get('currency', 'USD').upper()
         self._value_per_token = None
         self._exchange_rate = None
+        self._config = None
+
+    @property
+    def config(self):
+        """Fetch config from ~/.config/c20.yaml"""
+        if self._config is None:
+            self._config = load_config(f'{Path.home()}/.config/c20.yaml')
+        return self._config
+
+    @property
+    def status_fmt(self):
+        """Fetch status format config"""
+        return self.config.get('status_format', DEFAULT_MESSAGE)
+
+    @property
+    def num_tokens(self):
+        """Fetch number of tokens config"""
+        return self.config.get('num_tokens')
+
+    @property
+    def total_investment(self):
+        """Fetch total investment config"""
+        return self.config.get('total_investment', False)
+
+    @property
+    def currency(self):
+        """Fetch currency config"""
+        return self.config.get('currency', 'USD').upper()
 
     @property
     def value_per_token(self) -> float:
@@ -39,7 +66,9 @@ class C20:
             if self.currency == 'USD':
                 self._exchange_rate = 1.0
             else:
-                response = requests.get(f'https://api.fixer.io/latest?symbols={self.currency}&base=USD')
+                response = requests.get(
+                    f'https://api.fixer.io/latest?symbols={self.currency}&base=USD',
+                )
                 if response.status_code == 200:
                     self._exchange_rate = response.json().get('rates').get(self.currency)
                 else:
@@ -81,8 +110,5 @@ class C20:
         }
 
     def status(self) -> str:
+        """Return formatted status string"""
         return self.status_fmt.format(**self.data)
-
-
-if __name__ == '__main__':
-    print(C20().status())
