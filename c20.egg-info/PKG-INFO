@@ -11,4 +11,4 @@ Description: A simple module for calculating the value of c20 tokens.
 Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
-Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
