@@ -112,7 +112,7 @@ class TestC20(unittest.TestCase):
         )
         self.assertEqual(
             self.c20.increase_percent,
-            -98.5,
+            '-98.5%',
         )
 
         self.mock_load_config.return_value = {
@@ -126,7 +126,7 @@ class TestC20(unittest.TestCase):
         )
         self.assertEqual(
             c20increase.increase_percent,
-            2900,
+            '+2900.0%',
         )
 
     def test_status(self):
@@ -146,6 +146,17 @@ class TestC20(unittest.TestCase):
             c20status.status(),
             '1.5 3.0 2 USD 200 1.0 -197.0 -98.5%',
         )
+
+    def test_empty_init_investment(self):
+        """
+        Test that increase_num and increase_percent returns None when init_investment is not set
+        """
+        self.mock_load_config.return_value = {
+            'num_tokens': 2,
+        }
+        c20empty = C20()
+        self.assertIsNone(c20empty.increase_num)
+        self.assertIsNone(c20empty.increase_percent)
 
 
 if __name__ == '__main__':

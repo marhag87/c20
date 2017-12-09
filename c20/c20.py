@@ -59,10 +59,11 @@ class C20:
             return None
 
     @property
-    def increase_percent(self) -> Optional[float]:
+    def increase_percent(self) -> Optional[str]:
         """Increase in percent, if total investment has been specified"""
         if self.total_investment:
-            return ((self.curr_token_value/self.total_investment) - 1)*100
+            percent = ((self.curr_token_value/self.total_investment) - 1)*100
+            return "{0:+.01f}%".format(percent)
         else:
             return None
 
@@ -77,7 +78,7 @@ class C20:
             "total_investment": self.total_investment,
             "exchange_rate": self.exchange_rate,
             "growth_sum": self.increase_num,
-            "growth_percent": "{0:+.01f}%".format(self.increase_percent),
+            "growth_percent": self.increase_percent,
         }
 
     def status(self) -> str:
