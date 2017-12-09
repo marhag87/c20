@@ -4,41 +4,56 @@ from pyyamlconfig import load_config
 from pathlib import Path
 
 # default message
-default_msg = 'C20: Value: {curr_token_value} {currency} - Inc: {increase_num} {currency} ({percent_prefix}{increase_percent}%)'
+default_msg = 'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
 
 # Get tokens
-data = dict()
 home = str(Path.home())
 config = load_config(f'{home}/.config/c20.yaml')
 status_fmt = config.get('status_format', default_msg)
-data['num_tokens'] = config.get('num_tokens')
-data['total_investment'] = config.get('init_investment', False)
-data['currency'] = config.get('currency', 'USD').upper()
+num_tokens = config.get('num_tokens')
+total_investment = config.get('init_investment', False)
+currency = config.get('currency', 'USD').upper()
+
+increase_num = None
+increase_percent = None
+percent_prefix = ''
 
 # Get token value
 response = requests.get('https://us-central1-cryptodash1.cloudfunctions.net/fundValue')
-data['value_per_token'] = response.json().get('nav_per_token')
+value_per_token = response.json().get('nav_per_token')
 
-if data['currency'] == 'USD':
-  data['exchange_rate'] = 1
+if currency == 'USD':
+  exchange_rate = 1
 else:
   # Get dollar to chosen currency exchange rate
   response = requests.get('https://api.fixer.io/latest?base=USD')
-  data['exchange_rate'] = response.json().get('rates').get(data['currency'])
+  exchange_rate = response.json().get('rates').get(currency)
 
 # Calculate token val
-data['curr_token_value'] = round(data['value_per_token']*data['num_tokens']*data['exchange_rate'], 2)
+curr_token_value = round(value_per_token*num_tokens*exchange_rate, 2)
  
 # Calculate value increase from investment amount
-if data['total_investment']:
-  data['increase_num'] = round(data['curr_token_value'] - data['total_investment'], 2)
-  data['increase_percent'] = round((( \
-    float(data['curr_token_value'])/ \
-    float(data['total_investment'])) \
+if total_investment:
+  increase_num = round(curr_token_value - total_investment, 2)
+  increase_percent = round((( \
+    float(curr_token_value)/ \
+    float(total_investment)) \
     - 1)*100, 1)
 
-  data['percent_prefix'] =''
-  if data['increase_percent'] > 0:
-    data['percent_prefix'] = '+'
+  if increase_percent > 0:
+    percent_prefix = '+'
+  
+
+# Prepare data dict
+data = {
+  "nav": value_per_token,
+  "token_sum": curr_token_value,
+  "num_tokens": num_tokens,
+  "currency": currency,
+  "total_investment": total_investment,
+  "exchange_rate": exchange_rate,
+  "growth_sum": increase_num,
+  "growth_percent": f'{percent_prefix}{increase_percent}%'
+}
 
 print(status_fmt.format(**data))

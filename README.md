@@ -15,14 +15,14 @@ status_format: <string> - Custom format string for the message
 Format String Options
 ---------------------
 ```
-value_per_token - Token NAV value
+nav - Token NAV value
+token_sum - Total value for all your tokens in your currency
 num_tokens - Number of tokens you have specified in config
 currency - The currency you have chosen
 total_investment - The amount of money you invested
 exchange_rate - The current exchange rate to your currency from USD
-increase_num - The value increase from your investment cost to the current value_per_token * num_tokens
-increase_percent - The percentage increase to your investment
-precent_prefix - Adds a + or a minus infront of the increase_percent (eg. +23.33%, -34.44%)
+growth_sum - The value increase from your investment cost to the current value_per_token * num_tokens
+growth_percent - The percentage increase to your investment
 ```
 
 Format String Examples
@@ -31,17 +31,17 @@ Some examples when building your string format.
 
 This is the default string format if none is specified
 ```
-'C20: NAV: {value_per_token} USD - Value: {curr_token_value} {currency} ({percent_prefix}{increase_percent})'
+'C20: NAV: {nav} USD - Value: {token_sum} {currency} ({growth_percent})'
 C20: NAV: 1.3022 USD - Value: 12990.78 SEK (+36.5)
 ```
 
 ```
-'C20: Value: {curr_token_value} {currency} ({percent_prefix}{increase_percent}%)'
+'C20: Value: {token_sum} {currency} ({growth_percent})'
 C20: Value: 12990.78 SEK (+36.5%)
 ```
 
 ```
-'C20: NAV: {value_per_token} - Tokens: {num_tokens} - Value: {curr_token_value}{currency}'
+'C20: NAV: {nav} - Tokens: {num_tokens} - Value: {token_sum}{currency}'
 C20: NAV: 1.3005 - Tokens: 1181 - Value: 12973.82SEK
 ```
 
