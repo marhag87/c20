@@ -53,3 +53,12 @@ echo "num_tokens: <tokens>" > ~/.config/c20.yaml
 echo "init_investment: <investment>" >> ~/.config/c20.yaml
 c20
 ```
+
+Development
+-----------
+```
+pip install -e .
+pip install -r requirements.txt
+# Run tests
+python tests/tests.py
+```
