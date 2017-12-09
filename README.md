@@ -32,21 +32,30 @@ Format String Examples
 Some examples when building your string format.
 
 This is the default string format if none is specified
+
+<!--- example 10000 --->
 ```
-'C20: NAV: {nav} USD - Value: {token_sum} {currency} ({growth_percent})'
-C20: NAV: 1.3022 USD - Value: 12990.78 SEK (+36.5)
+C20: NAV: {nav} USD - Value: {token_sum} {currency} ({growth_percent})
+C20: NAV: 1.3022 USD - Value: 13219.93 SEK (+32.2%)
 ```
 
+<!--- example 10000 --->
 ```
-'C20: Value: {token_sum} {currency} ({growth_percent})'
-C20: Value: 12990.78 SEK (+36.5%)
-```
-
-```
-'C20: NAV: {nav} - Tokens: {num_tokens} - Value: {token_sum}{currency}'
-C20: NAV: 1.3005 - Tokens: 1181 - Value: 12973.82SEK
+C20: Value: {token_sum} {currency} ({growth_percent})
+C20: Value: 13219.93 SEK (+32.2%)
 ```
 
+<!--- example 10000 --->
+```
+C20: NAV: {nav} - Tokens: {num_tokens} - Value: {token_sum}{currency}
+C20: NAV: 1.3022 - Tokens: 1200 - Value: 13219.93SEK
+```
+
+<!--- example 15000 --->
+```
+{token_sum}kr ({growth_percent})
+13219.93kr (-11.9%)
+```
 Usage
 -----
 ```

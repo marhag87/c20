@@ -1,6 +1,7 @@
 #!/bin/env python
 import unittest
 import mock
+import re
 import pyyamlconfig
 mock_load_config = mock.Mock()
 pyyamlconfig.load_config = mock_load_config
@@ -179,6 +180,44 @@ class TestC20(unittest.TestCase):
         c20empty = C20()
         self.assertIsNone(c20empty.increase_num)
         self.assertIsNone(c20empty.increase_percent)
+
+    def test_readme_examples(self):
+        """
+        Test that the examples in the readme give the expected result
+        """
+        with open('README.md') as file:
+            started = False
+            previous_line = ''
+            line_number = 0
+            investment = 10000
+            for line in file.readlines():
+                if re.match('^<!--- example .* --->\\n$', line):
+                    started = True
+                    investment = float(line.split(' ')[2])
+                if started:
+                    if line_number == 3:
+                        self.mock_load_config.return_value = {
+                            'num_tokens': 1200,
+                            'init_investment': investment,
+                            'currency': 'sek',
+                            'status_format': previous_line,
+                        }
+                        self.mock_json.return_value = {
+                            'nav_per_token': 1.3022,
+                            'rates': {
+                                'SEK': 8.46,
+                            }
+                        }
+                        c20status = C20()
+                        self.assertEqual(
+                            c20status.status(),
+                            line,
+                        )
+                        started = False
+                        line_number = 0
+                        continue
+                    previous_line = line
+                    line_number = line_number + 1
 
 
 if __name__ == '__main__':
