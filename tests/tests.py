@@ -7,7 +7,8 @@ pyyamlconfig.load_config = mock_load_config
 from c20 import C20
 from c20.c20 import (
     TOKEN_ERROR,
-    CURRENCY_ERROR
+    CURRENCY_ERROR,
+    CURRENCY_NOT_FOUND,
 )
 
 
@@ -91,6 +92,27 @@ class TestC20(unittest.TestCase):
         self.assertEqual(
             str(err.exception),
             CURRENCY_ERROR,
+        )
+
+    def test_exchange_rate_currency_missing(self):
+        """
+        Test that exchange_rate raises if the currency doesn't exist
+        """
+        self.mock_load_config.return_value = {
+            'num_tokens': 2,
+            'init_investment': 200,
+            'currency': 'sek',
+        }
+        self.mock_json.return_value = {
+            'nav_per_token': 1.5,
+            'rates': {}
+        }
+        c20missing = C20()
+        with self.assertRaises(Exception) as err:
+            print(c20missing.exchange_rate)
+        self.assertEqual(
+            str(err.exception),
+            CURRENCY_NOT_FOUND,
         )
 
     def test_curr_token_value(self):

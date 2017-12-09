@@ -6,6 +6,7 @@ from pyyamlconfig import load_config
 
 TOKEN_ERROR = 'Could not get token data'
 CURRENCY_ERROR = 'Could not get currency data'
+CURRENCY_NOT_FOUND = 'Could not find the currency'
 
 
 class C20:
@@ -38,11 +39,13 @@ class C20:
             if self.currency == 'USD':
                 self._exchange_rate = 1.0
             else:
-                response = requests.get('https://api.fixer.io/latest?base=USD')
+                response = requests.get(f'https://api.fixer.io/latest?symbols={self.currency}&base=USD')
                 if response.status_code == 200:
                     self._exchange_rate = response.json().get('rates').get(self.currency)
                 else:
                     raise Exception(CURRENCY_ERROR)
+                if self._exchange_rate is None:
+                    raise Exception(CURRENCY_NOT_FOUND)
         return self._exchange_rate
 
     @property
