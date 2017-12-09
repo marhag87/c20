@@ -1,0 +1,4 @@
+nose
+pylint
+mock
+-r ../requirements.txt

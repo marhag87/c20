@@ -4,6 +4,9 @@ from pyyamlconfig import load_config
 from pathlib import Path
 from typing import Optional
 
+TOKEN_ERROR = 'Could not get token data'
+CURRENCY_ERROR = 'Could not get currency data'
+
 
 class C20:
     def __init__(self):
@@ -25,7 +28,7 @@ class C20:
             if response.status_code == 200:
                 self._value_per_token = response.json().get('nav_per_token')
             else:
-                raise Exception('Could not get token data')
+                raise Exception(TOKEN_ERROR)
         return self._value_per_token
 
     @property
@@ -39,7 +42,7 @@ class C20:
                 if response.status_code == 200:
                     self._exchange_rate = response.json().get('rates').get(self.currency)
                 else:
-                    raise Exception('Could not get currency data')
+                    raise Exception(CURRENCY_ERROR)
         return self._exchange_rate
 
     @property
