@@ -23,7 +23,7 @@ class TestC20(unittest.TestCase):
         self.mock_response.status_code = 200
         self.mock_json.return_value = {'nav_per_token': 1.5}
         self.mock_get.return_value = self.mock_response
-        self.mock_load_config.return_value = {'num_tokens': 2, 'init_investment': 200}
+        self.mock_load_config.return_value = {'num_tokens': 2, 'total_investment': 200}
         self.c20 = C20()
 
     def test_default_string(self):
@@ -62,7 +62,7 @@ class TestC20(unittest.TestCase):
         """
         self.mock_load_config.return_value = {
             'num_tokens': 2,
-            'init_investment': 200,
+            'total_investment': 200,
             'currency': 'sek',
         }
         self.mock_json.return_value = {
@@ -83,7 +83,7 @@ class TestC20(unittest.TestCase):
         """
         self.mock_load_config.return_value = {
             'num_tokens': 2,
-            'init_investment': 200,
+            'total_investment': 200,
             'currency': 'sek',
         }
         self.mock_response.status_code = 404
@@ -101,7 +101,7 @@ class TestC20(unittest.TestCase):
         """
         self.mock_load_config.return_value = {
             'num_tokens': 2,
-            'init_investment': 200,
+            'total_investment': 200,
             'currency': 'sek',
         }
         self.mock_json.return_value = {
@@ -140,7 +140,7 @@ class TestC20(unittest.TestCase):
 
         self.mock_load_config.return_value = {
             'num_tokens': 200,
-            'init_investment': 10,
+            'total_investment': 10,
         }
         c20increase = C20()
         self.assertEqual(
@@ -158,7 +158,7 @@ class TestC20(unittest.TestCase):
         """
         self.mock_load_config.return_value = {
             'num_tokens': 2,
-            'init_investment': 200,
+            'total_investment': 200,
             'status_format': (
                 '{nav} {token_sum} {num_tokens} {currency} {total_investment} '
                 '{exchange_rate} {growth_sum} {growth_percent}'
@@ -170,9 +170,9 @@ class TestC20(unittest.TestCase):
             '1.5 3.0 2 USD 200 1.0 -197.0 -98.5%',
         )
 
-    def test_empty_init_investment(self):
+    def test_empty_total_investment(self):
         """
-        Test that increase_num and increase_percent returns None when init_investment is not set
+        Test that increase_num and increase_percent returns None when total_investment is not set
         """
         self.mock_load_config.return_value = {
             'num_tokens': 2,
@@ -198,7 +198,7 @@ class TestC20(unittest.TestCase):
                     if line_number == 3:
                         self.mock_load_config.return_value = {
                             'num_tokens': 1200,
-                            'init_investment': investment,
+                            'total_investment': investment,
                             'currency': 'sek',
                             'status_format': previous_line,
                         }

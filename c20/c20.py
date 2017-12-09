@@ -16,7 +16,7 @@ class C20:
         self.config = load_config(f'{self.home}/.config/c20.yaml')
         self.status_fmt = self.config.get('status_format', self.default_msg)
         self.num_tokens = self.config.get('num_tokens')
-        self.total_investment = self.config.get('init_investment', False)
+        self.total_investment = self.config.get('total_investment', False)
         self.currency = self.config.get('currency', 'USD').upper()
         self._value_per_token = None
         self._exchange_rate = None

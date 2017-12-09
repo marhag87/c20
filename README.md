@@ -61,7 +61,7 @@ Usage
 ```
 pip install c20
 echo "num_tokens: <tokens>" > ~/.config/c20.yaml
-echo "init_investment: <investment>" >> ~/.config/c20.yaml
+echo "total_investment: <investment>" >> ~/.config/c20.yaml
 c20
 ```
 
