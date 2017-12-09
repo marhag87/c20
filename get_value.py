@@ -14,7 +14,6 @@ class C20:
         self.num_tokens = self.config.get('num_tokens')
         self.total_investment = self.config.get('init_investment', False)
         self.currency = self.config.get('currency', 'USD').upper()
-        self._percent_prefix = ''
         self._value_per_token = None
         self._exchange_rate = None
 
@@ -55,16 +54,11 @@ class C20:
 
     @property
     def increase_percent(self) -> Optional[float]:
+        """Increase in percent, if total investment has been specified"""
         if self.total_investment:
-            return round(((self.curr_token_value/self.total_investment)- 1)*100, 1)
+            return ((self.curr_token_value/self.total_investment) - 1)*100
         else:
             return None
-
-    @property
-    def percent_prefix(self) -> str:
-        if self.increase_percent > 0:
-            self._percent_prefix = '+'
-        return self._percent_prefix
 
     @property
     def data(self) -> dict:
@@ -76,7 +70,7 @@ class C20:
             "total_investment": self.total_investment,
             "exchange_rate": self.exchange_rate,
             "growth_sum": self.increase_num,
-            "growth_percent": f'{self.percent_prefix}{self.increase_percent}%'
+            "growth_percent": "{0:+.01f}%".format(self.increase_percent),
         }
 
     def status(self) -> str:
