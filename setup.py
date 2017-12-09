@@ -12,7 +12,7 @@ setup(
     author='marhag87',
     author_email='marhag87@gmail.com',
     url='https://github.com/marhag87/c20',
-    version='0.1.1',
+    version='0.1.2',
     packages=find_packages(),
     license='WTFPL',
     description='Calculate value of c20 tokens',
