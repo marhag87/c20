@@ -1,8 +1,8 @@
 #!/bin/env python
-import requests
-from pyyamlconfig import load_config
 from pathlib import Path
 from typing import Optional
+import requests
+from pyyamlconfig import load_config
 
 TOKEN_ERROR = 'Could not get token data'
 CURRENCY_ERROR = 'Could not get currency data'
@@ -82,5 +82,4 @@ class C20:
 
 
 if __name__ == '__main__':
-    c20 = C20()
-    print(c20.status())
+    print(C20().status())
