@@ -2,58 +2,87 @@
 import requests
 from pyyamlconfig import load_config
 from pathlib import Path
+from typing import Optional
 
-# default message
-default_msg = 'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
 
-# Get tokens
-home = str(Path.home())
-config = load_config(f'{home}/.config/c20.yaml')
-status_fmt = config.get('status_format', default_msg)
-num_tokens = config.get('num_tokens')
-total_investment = config.get('init_investment', False)
-currency = config.get('currency', 'USD').upper()
+class C20:
+    def __init__(self):
+        self.default_msg = 'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
+        self.home = str(Path.home())
+        self.config = load_config(f'{self.home}/.config/c20.yaml')
+        self.status_fmt = self.config.get('status_format', self.default_msg)
+        self.num_tokens = self.config.get('num_tokens')
+        self.total_investment = self.config.get('init_investment', False)
+        self.currency = self.config.get('currency', 'USD').upper()
+        self._percent_prefix = ''
+        self._value_per_token = None
+        self._exchange_rate = None
 
-increase_num = None
-increase_percent = None
-percent_prefix = ''
+    @property
+    def value_per_token(self) -> float:
+        """Fetch token value"""
+        if self._value_per_token is None:
+            response = requests.get('https://us-central1-cryptodash1.cloudfunctions.net/fundValue')
+            if response.status_code == 200:
+                self._value_per_token = response.json().get('nav_per_token')
+            else:
+                raise Exception('Could not get token data')
+        return self._value_per_token
 
-# Get token value
-response = requests.get('https://us-central1-cryptodash1.cloudfunctions.net/fundValue')
-value_per_token = response.json().get('nav_per_token')
+    @property
+    def exchange_rate(self) -> float:
+        if self._exchange_rate is None:
+            if self.currency == 'USD':
+                self._exchange_rate = 1.0
+            else:
+                response = requests.get('https://api.fixer.io/latest?base=USD')
+                if response.status_code == 200:
+                    self._exchange_rate = response.json().get('rates').get(self.currency)
+                else:
+                    raise Exception('Could not get currency data')
+        return self._exchange_rate
 
-if currency == 'USD':
-  exchange_rate = 1
-else:
-  # Get dollar to chosen currency exchange rate
-  response = requests.get('https://api.fixer.io/latest?base=USD')
-  exchange_rate = response.json().get('rates').get(currency)
+    @property
+    def curr_token_value(self) -> float:
+        return round(self.value_per_token * self.num_tokens * self.exchange_rate, 2)
 
-# Calculate token val
-curr_token_value = round(value_per_token*num_tokens*exchange_rate, 2)
- 
-# Calculate value increase from investment amount
-if total_investment:
-  increase_num = round(curr_token_value - total_investment, 2)
-  increase_percent = round((( \
-    float(curr_token_value)/ \
-    float(total_investment)) \
-    - 1)*100, 1)
+    @property
+    def increase_num(self) -> Optional[float]:
+        if self.total_investment:
+            return round(self.curr_token_value - self.total_investment, 2)
+        else:
+            return None
 
-  if increase_percent > 0:
-    percent_prefix = '+'
-  
+    @property
+    def increase_percent(self) -> Optional[float]:
+        if self.total_investment:
+            return round(((self.curr_token_value/self.total_investment)- 1)*100, 1)
+        else:
+            return None
 
-# Prepare data dict
-data = {
-  "nav": value_per_token,
-  "token_sum": curr_token_value,
-  "num_tokens": num_tokens,
-  "currency": currency,
-  "total_investment": total_investment,
-  "exchange_rate": exchange_rate,
-  "growth_sum": increase_num,
-  "growth_percent": f'{percent_prefix}{increase_percent}%'
-}
+    @property
+    def percent_prefix(self) -> str:
+        if self.increase_percent > 0:
+            self._percent_prefix = '+'
+        return self._percent_prefix
 
-print(status_fmt.format(**data))
+    @property
+    def data(self) -> dict:
+        return {
+            "nav": self.value_per_token,
+            "token_sum": self.curr_token_value,
+            "num_tokens": self.num_tokens,
+            "currency": self.currency,
+            "total_investment": self.total_investment,
+            "exchange_rate": self.exchange_rate,
+            "growth_sum": self.increase_num,
+            "growth_percent": f'{self.percent_prefix}{self.increase_percent}%'
+        }
+
+    def status(self) -> str:
+        return self.status_fmt.format(**self.data)
+
+
+if __name__ == '__main__':
+    c20 = C20()
+    print(c20.status())
