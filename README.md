@@ -71,7 +71,5 @@ Development
 pip install -e .
 pip install -r requirements.txt
 # Run tests
-python tests/tests.py
-# Run pylint
-pylint c20
+tox
 ```

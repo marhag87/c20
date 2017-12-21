@@ -2,3 +2,5 @@ requests
 pyyamlconfig
 mock
 pylint
+coverage
+tox

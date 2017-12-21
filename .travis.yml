@@ -1,5 +1,9 @@
 language: python
 python:
   - "3.6"
-install: "pip install -r requirements.txt && pip install -e ."
-script: "python tests/tests.py && pylint c20"
+before_install:
+  - pip install codeclimate-test-reporter
+install: pip install tox
+script: tox
+after_success:
+  - codeclimate-test-reporter
