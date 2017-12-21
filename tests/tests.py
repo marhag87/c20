@@ -10,6 +10,7 @@ from c20.c20 import (
     TOKEN_ERROR,
     CURRENCY_ERROR,
     CURRENCY_NOT_FOUND,
+    MISSING_TOTAL_INVESTMENT,
 )
 
 
@@ -178,8 +179,19 @@ class TestC20(unittest.TestCase):
             'num_tokens': 2,
         }
         c20empty = C20()
-        self.assertIsNone(c20empty.increase_num)
-        self.assertIsNone(c20empty.increase_percent)
+        with self.assertRaises(Exception) as err:
+            print(c20empty.increase_num)
+        self.assertEqual(
+            str(err.exception),
+            MISSING_TOTAL_INVESTMENT,
+        )
+
+        with self.assertRaises(Exception) as err:
+            print(c20empty.increase_percent)
+        self.assertEqual(
+            str(err.exception),
+            MISSING_TOTAL_INVESTMENT,
+        )
 
     def test_readme_examples(self):
         """

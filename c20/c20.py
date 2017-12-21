@@ -2,7 +2,6 @@
 Module for calculating value of c20 tokens
 """
 from pathlib import Path
-from typing import Optional
 import requests
 from pyyamlconfig import load_config
 
@@ -12,6 +11,7 @@ CURRENCY_NOT_FOUND = 'Could not find the currency'
 DEFAULT_MESSAGE = (
     'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
 )
+MISSING_TOTAL_INVESTMENT = 'No total investment specified'
 
 
 class C20:
@@ -83,17 +83,21 @@ class C20:
         return round(self.value_per_token * self.num_tokens * self.exchange_rate, 2)
 
     @property
-    def increase_num(self) -> Optional[float]:
+    def increase_num(self) -> float:
         """Value increase, if total investment has been specified"""
         if self.total_investment:
             return round(self.curr_token_value - self.total_investment, 2)
+        else:
+            raise Exception(MISSING_TOTAL_INVESTMENT)
 
     @property
-    def increase_percent(self) -> Optional[str]:
+    def increase_percent(self) -> str:
         """Increase in percent, if total investment has been specified"""
         if self.total_investment:
             percent = ((self.curr_token_value/self.total_investment) - 1)*100
             return "{0:+.01f}%".format(percent)
+        else:
+            raise Exception(MISSING_TOTAL_INVESTMENT)
 
     @property
     def data(self) -> dict:
