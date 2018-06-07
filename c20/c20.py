@@ -12,6 +12,7 @@ DEFAULT_MESSAGE = (
     'C20: Value: {token_sum} {currency} - Inc: {growth_sum} {currency} ({growth_percent})'
 )
 MISSING_TOTAL_INVESTMENT = 'No total investment specified'
+EXCHANGE_API = 'https://free.currencyconverterapi.com/api/v5/convert'
 
 
 class C20:
@@ -67,10 +68,10 @@ class C20:
                 self._exchange_rate = 1.0
             else:
                 response = requests.get(
-                    f'https://api.fixer.io/latest?symbols={self.currency}&base=USD',
+                    f'{EXCHANGE_API}?q=USD_{self.currency}&compact=y',
                 )
                 if response.status_code == 200:
-                    self._exchange_rate = response.json().get('rates').get(self.currency)
+                    self._exchange_rate = response.json().get(f'USD_{self.currency}').get('val')
                 else:
                     raise Exception(CURRENCY_ERROR)
                 if self._exchange_rate is None:

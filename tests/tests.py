@@ -68,8 +68,8 @@ class TestC20(unittest.TestCase):
         }
         self.mock_json.return_value = {
             'nav_per_token': 1.5,
-            'rates': {
-                'SEK': 7,
+            'USD_SEK': {
+                'val': 7,
             }
         }
         c20sek = C20()
@@ -107,7 +107,7 @@ class TestC20(unittest.TestCase):
         }
         self.mock_json.return_value = {
             'nav_per_token': 1.5,
-            'rates': {}
+            'USD_SEK': {}
         }
         c20missing = C20()
         with self.assertRaises(Exception) as err:
@@ -216,8 +216,8 @@ class TestC20(unittest.TestCase):
                         }
                         self.mock_json.return_value = {
                             'nav_per_token': 1.3022,
-                            'rates': {
-                                'SEK': 8.46,
+                            'USD_SEK': {
+                                'val': 8.46,
                             }
                         }
                         c20status = C20()
